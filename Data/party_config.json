@@ -1,0 +1,94 @@
+{
+    "PP": {
+        "color": "#01568f",
+        "position": 80
+    },
+    "PSOE": {
+        "color": "#e01021",
+        "position": 40
+    },
+    "VOX": {
+        "color": "#63be21",
+        "position": 100
+    },
+    "SUMAR": {
+        "color": "#e14e86",
+        "position": 20
+    },
+    "MÁS PAÍS": {
+        "color": "#e14e86",
+        "position": 21
+    },
+    "SUMAR/MÁS PAÍS": {
+        "color": "#e14e86",
+        "position": 22
+    },
+    "PODEMOS/IU/SUMAR": {
+        "color": "#6b2e68",
+        "position": 10
+    },
+    "PODEMOS": {
+        "color": "#6b2e68",
+        "position": 10
+    },
+    "PODEMOS-IU": {
+        "color": "#6b2e68",
+        "position": 11
+    },
+    "PODEMOS-EU": {
+        "color": "#6b2e68",
+        "position": 12
+    },
+    "ECP-GUANYEM": {
+        "color": "#6b2e68",
+        "position": 13
+    },
+    "IU": {
+        "color": "#6b2e68",
+        "position": 15
+    },
+    "ERC": {
+        "color": "#ffdf00",
+        "position": 35
+    },
+    "JUNTS": {
+        "color": "#00c3b2",
+        "position": 30
+    },
+    "JxCat": {
+        "color": "#00c3b2",
+        "position": 31
+    },
+    "EH Bildu": {
+        "color": "#b5cf18",
+        "position": 5
+    },
+    "EAJ-PNV": {
+        "color": "#008a21",
+        "position": 45
+    },
+    "BNG": {
+        "color": "#70b6ff",
+        "position": 25
+    },
+    "CCa": {
+        "color": "#ffdf00",
+        "position": 50
+    },
+    "UPN": {
+        "color": "#00478a",
+        "position": 90
+    },
+    "C's": {
+        "color": "#eb6109",
+        "position": 70
+    },
+    "PACMA": {
+        "color": "#12ec00",
+        "position": 12
+    },
+    "CUP": {
+        "color": "#fff000",
+        "position": 8
+    }
+}

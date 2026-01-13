@@ -1,0 +1,27 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Logs
+*.log
+server.log
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Editor directories
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Vercel
+.vercel/
