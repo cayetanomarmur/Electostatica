@@ -832,7 +832,7 @@ h3 {
 
 /* Coalition Builder & Constructor Panels - Glassmorphism */
 .coalition-builder,
-.predictor-layout {
+.constructor-layout {
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -1124,12 +1124,12 @@ h3 {
 }
 
 /* Constructor Styles - Restored Layout */
-.predictor-layout {
+.constructor-layout {
   padding: 1.5rem;
   height: calc(100vh - 60px);
 }
 
-.predictor-layout.split-view {
+.constructor-layout.split-view {
   display: grid;
   grid-template-columns: 1fr 40%;
   /* 60% main, 40% side panel */
@@ -1137,13 +1137,13 @@ h3 {
   overflow: hidden;
 }
 
-.predictor-layout.centered-view {
+.constructor-layout.centered-view {
   max-width: 900px;
   margin: 0 auto;
   overflow-y: auto;
 }
 
-.predictor-main {
+.constructor-main {
   background: var(--surface);
   border: 1px solid var(--surface-border);
   border-radius: var(--radius-md);
@@ -1152,7 +1152,7 @@ h3 {
   height: 100%;
 }
 
-.predictor-side-panel {
+.constructor-side-panel {
   height: 100%;
   overflow: hidden;
 }
@@ -1393,17 +1393,17 @@ h3 {
   }
 
   /* Constructor */
-  .predictor-layout {
+  .constructor-layout {
     padding: 0.75rem;
     height: auto;
     min-height: calc(100vh - 50px);
   }
 
-  .predictor-layout.split-view {
+  .constructor-layout.split-view {
     grid-template-columns: 1fr;
   }
 
-  .predictor-main {
+  .constructor-main {
     padding: 0.75rem;
   }
 

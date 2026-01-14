@@ -111,7 +111,7 @@ const Constructor = () => {
     };
 
     if (loading && !electionData) {
-        return <div className="predictor-loading">Cargando datos...</div>;
+        return <div className="constructor-loading">Cargando datos...</div>;
     }
 
     // Determine if current election is municipales
@@ -274,7 +274,7 @@ const Constructor = () => {
     };
 
     const showSidePanel = scenarios.length > 0;
-    const layoutClass = showSidePanel ? "predictor-layout split-view" : "predictor-layout centered-view";
+    const layoutClass = showSidePanel ? "constructor-layout split-view" : "constructor-layout centered-view";
     const currentTypeElections = electionsByType[electionType] || [];
 
 
@@ -287,8 +287,8 @@ const Constructor = () => {
 
     return (
         <div className={layoutClass}>
-            <div className="predictor-main">
-                <div className="predictor-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div className="constructor-main">
+                <div className="constructor-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <h3>Constructor de Coaliciones</h3>
                     <button className="reset-btn" onClick={resetToOriginal} style={{
                         background: 'transparent',
@@ -302,7 +302,7 @@ const Constructor = () => {
                 </div>
 
                 {/* Election Selection - Single Line Compact */}
-                <div className="predictor-election-selector" style={{
+                <div className="constructor-election-selector" style={{
                     display: 'flex',
                     alignItems: 'center',
                     gap: '1rem',
@@ -340,7 +340,7 @@ const Constructor = () => {
                     </div>
                 </div>
 
-                <p className="predictor-description" style={{ marginBottom: '1rem', fontSize: '0.8rem' }}>
+                <p className="constructor-description" style={{ marginBottom: '1rem', fontSize: '0.8rem' }}>
                     Modifica los {seatLabel.toLowerCase()} y selecciona partidos para ver la mayoría.
                     {isMunicipales && <span style={{ opacity: 0.7 }}> (Mayoría: {majoritySeats}+ municipios)</span>}
                 </p>
@@ -608,7 +608,7 @@ const Constructor = () => {
                 </div>
 
                 {/* Add Party */}
-                <div className="predictor-add-more" style={{ marginTop: '1rem' }}>
+                <div className="constructor-add-more" style={{ marginTop: '1rem' }}>
                     <select
                         className="premium-select"
                         style={{ width: '100%', padding: '0.6rem' }}
@@ -641,7 +641,7 @@ const Constructor = () => {
 
             {/* Right Panel: Saved Predictions (Only if scenarios exist) */}
             {showSidePanel && (
-                <div className="predictor-side-panel">
+                <div className="constructor-side-panel">
                     <SavedPredictions
                         savedList={scenarios}
                         onLoad={loadScenario}

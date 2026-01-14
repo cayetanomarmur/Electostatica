@@ -323,7 +323,7 @@ const AppContent = () => {
         <div className="app-container premium-theme">
             <header className="premium-header">
                 <div className="header-logo-container">
-                    <img src="/logo_horiz.png" alt="ELECTOSTATICAΔ.IO" className="header-logo" />
+                    <img src="/logo_horiz.png" alt="ELECTOSTΔTICA" className="header-logo" />
                     <div className="copyright-mobile">
                         © Electostatica · <a href="https://github.com/cayetanomarmur" target="_blank" rel="noopener noreferrer">Author</a>
                     </div>
