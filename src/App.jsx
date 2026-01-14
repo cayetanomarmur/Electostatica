@@ -323,14 +323,14 @@ const AppContent = () => {
         <div className="app-container premium-theme">
             <header className="premium-header">
                 <div className="header-logo-container">
-                    <img src="/logo_horiz.png" alt="ELECTOSTATICAΔ.IO" className="header-logo" />
+                    <img src="/logo_horiz.png" alt="ELECTOSTΔTICA" className="header-logo" />
                     <div className="copyright-mobile">
-                        © Electostatica · <a href="https://github.com/cayetanomarmur" target="_blank" rel="noopener noreferrer">Author</a>
+                        © Electostatica · <a href="https://github.com/cayetanomarmur" target="_blank" rel="noopener noreferrer">Cayetano Martínez Muriel</a>
                     </div>
                 </div>
                 <div className="copyright-desktop">
                     <div>© Electostatica</div>
-                    <div>Author: <a href="https://github.com/cayetanomarmur" target="_blank" rel="noopener noreferrer">Cayetano Martínez Muriel</a></div>
+                    <div>Made by <a href="https://github.com/cayetanomarmur" target="_blank" rel="noopener noreferrer">Cayetano Martínez Muriel</a></div>
                 </div>
                 <div className="header-controls">
                     <nav className="nav-menu">
