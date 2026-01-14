@@ -830,7 +830,7 @@ h3 {
   overflow-x: auto;
 }
 
-/* Coalition Builder & Predictor Panels - Glassmorphism */
+/* Coalition Builder & Constructor Panels - Glassmorphism */
 .coalition-builder,
 .predictor-layout {
   height: 100%;
@@ -1123,7 +1123,7 @@ h3 {
   color: var(--text-muted);
 }
 
-/* Predictor Styles - Restored Layout */
+/* Constructor Styles - Restored Layout */
 .predictor-layout {
   padding: 1.5rem;
   height: calc(100vh - 60px);
@@ -1392,7 +1392,7 @@ h3 {
     font-size: 0.75rem;
   }
 
-  /* Predictor */
+  /* Constructor */
   .predictor-layout {
     padding: 0.75rem;
     height: auto;
@@ -1615,7 +1615,7 @@ h3 {
 
 @media (max-width: 640px) {
   .header-logo-container {
-    /* Flush left on mobile */
+    /* Flush left on mobile, stack vertically */
     position: static;
     transform: none;
     justify-content: flex-start;

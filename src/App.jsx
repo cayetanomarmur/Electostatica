@@ -6,7 +6,7 @@ import CCAASeatGrid from './components/Charts/CCAASeatGrid';
 import SeatBar from './components/Charts/SeatBar';
 import TimeHistory from './components/Charts/TimeHistory';
 import CoalitionBuilder from './components/CoalitionBuilder';
-import Predictor from './components/Predictor';
+import Constructor from './components/Constructor';
 import MultiMapView from './components/MultiMapView';
 import ElectionControls from './components/Controls/ElectionControls';
 import { provinces as provinceData } from './utils/regionData';
@@ -290,7 +290,7 @@ const AppContent = () => {
                                 filterState={filterState}
                             />
 
-                            {/* Predictor - only for Congreso elections */}
+                            {/* Constructor - only for Congreso elections */}
                             {selectedElection?.startsWith('congreso') && (
                                 <div className="coalition-container">
                                     <CoalitionBuilder
@@ -309,7 +309,7 @@ const AppContent = () => {
     const renderView = () => {
         switch (currentView) {
             case 'trends': return <TimeHistory elections={elections} />;
-            case 'predictor': return <Predictor />;
+            case 'constructor': return <Constructor />;
             case 'comparison': return <MultiMapView elections={elections} />;
             default: return renderContent();
         }
@@ -323,14 +323,14 @@ const AppContent = () => {
         <div className="app-container premium-theme">
             <header className="premium-header">
                 <div className="header-logo-container">
-                    <img src="/logo_horiz.png" alt="ELECTOSTΔTICA" className="header-logo" />
+                    <img src="/logo_horiz.png" alt="ELECTOSTATICAΔ.IO" className="header-logo" />
                     <div className="copyright-mobile">
-                        © Electostatica · <a href="https://github.com/cayetanomarmur" target="_blank" rel="noopener noreferrer">Cayetano Martínez Muriel</a>
+                        © Electostatica · <a href="https://github.com/cayetanomarmur" target="_blank" rel="noopener noreferrer">Author</a>
                     </div>
                 </div>
                 <div className="copyright-desktop">
                     <div>© Electostatica</div>
-                    <div>Made by <a href="https://github.com/cayetanomarmur" target="_blank" rel="noopener noreferrer">Cayetano Martínez Muriel</a></div>
+                    <div>Author: <a href="https://github.com/cayetanomarmur" target="_blank" rel="noopener noreferrer">Cayetano Martínez Muriel</a></div>
                 </div>
                 <div className="header-controls">
                     <nav className="nav-menu">
@@ -343,7 +343,7 @@ const AppContent = () => {
                             <option value="dashboard">Dashboard</option>
                             <option value="trends">Tendencias</option>
                             <option value="comparison">Multimapa</option>
-                            <option value="predictor">Predictor</option>
+                            <option value="constructor">Constructor</option>
                         </select>
                         {/* Desktop buttons */}
                         <button
@@ -365,10 +365,10 @@ const AppContent = () => {
                             Multimapa
                         </button>
                         <button
-                            className={`nav-btn nav-desktop ${currentView === 'predictor' ? 'active' : ''}`}
-                            onClick={() => setCurrentView('predictor')}
+                            className={`nav-btn nav-desktop ${currentView === 'constructor' ? 'active' : ''}`}
+                            onClick={() => setCurrentView('constructor')}
                         >
-                            Predictor
+                            Constructor
                         </button>
                     </nav>
                 </div>
@@ -376,7 +376,7 @@ const AppContent = () => {
             <main className="main-content">
                 {currentView === 'dashboard' && renderContent()}
                 {currentView === 'trends' && <TimeHistory elections={elections} />}
-                {currentView === 'predictor' && <Predictor />}
+                {currentView === 'constructor' && <Constructor />}
                 {currentView === 'comparison' && <MultiMapView elections={elections} />}
             </main>
         </div>

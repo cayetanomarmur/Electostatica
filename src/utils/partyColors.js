@@ -7,7 +7,7 @@ export const PARTY_COLORS = PARTY_CONFIG.colors;
 
 /**
  * Get party info (color and display name) using the centralized partyUtils config
- * This ensures consistent colors across Coalition Builder, Predictor, and all other panels
+ * This ensures consistent colors across Coalition Builder, Constructor, and all other panels
  */
 export const getPartyInfo = (siglas) => {
     if (!siglas) return { color: PARTY_CONFIG.colors.DEFAULT, siglas: '?' };
