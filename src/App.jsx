@@ -6,7 +6,7 @@ import CCAASeatGrid from './components/Charts/CCAASeatGrid';
 import SeatBar from './components/Charts/SeatBar';
 import TimeHistory from './components/Charts/TimeHistory';
 import CoalitionBuilder from './components/CoalitionBuilder';
-import Constructor from './components/Constructor.jsx';
+import Constructor from './components/Constructor';
 import MultiMapView from './components/MultiMapView';
 import ElectionControls from './components/Controls/ElectionControls';
 import { provinces as provinceData } from './utils/regionData';
