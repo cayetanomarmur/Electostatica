@@ -135,6 +135,51 @@ h3 {
   align-items: center;
 }
 
+/* Copyright - Desktop (top-right) */
+.copyright-desktop {
+  position: absolute;
+  top: 50%;
+  right: 2rem;
+  transform: translateY(-50%);
+  text-align: right;
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.copyright-desktop a {
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.copyright-desktop a:hover {
+  color: var(--text);
+}
+
+/* Copyright - Mobile (under logo) */
+.copyright-mobile {
+  display: none;
+  font-size: 0.55rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.copyright-mobile a {
+  color: var(--text-muted);
+  text-decoration: none;
+}
+
+@media (max-width: 768px) {
+  .copyright-desktop {
+    display: none;
+  }
+
+  .copyright-mobile {
+    display: block;
+  }
+}
+
 .nav-tabs {
   display: flex;
   gap: 0.5rem;
