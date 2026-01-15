@@ -23,7 +23,7 @@ const App = () => {
 };
 
 const AppContent = () => {
-    const { t } = useLanguage();
+    const { t, lang, setLang } = useLanguage();
     const [currentView, setCurrentView] = useState('dashboard');
     const [elections, setElections] = useState([]);
     const [selectedElection, setSelectedElection] = useState('');
@@ -215,12 +215,12 @@ const AppContent = () => {
     };
 
     const renderContent = () => {
-        if (!electionData) return <div className="loading-state">Cargando datos...</div>;
+        if (!electionData) return <div className="loading-state">{t('loading')}</div>;
 
         // Election selectors for the map
         const currentTypeElections = electionsByType[currentElectionType] || [];
         const electionSelectors = (
-            <div style={{ display: 'flex', gap: '0.5rem' }}>
+            <div className="election-selectors-wrapper">
                 <select
                     value={currentElectionType}
                     onChange={(e) => handleTypeChange(e.target.value)}
@@ -232,8 +232,8 @@ const AppContent = () => {
                         width: 'auto'
                     }}
                 >
-                    <option value="congreso">Congreso</option>
-                    <option value="municipales">Municipales</option>
+                    <option value="congreso">{t('congreso')}</option>
+                    <option value="municipales">{t('municipales')}</option>
                 </select>
                 <select
                     value={selectedElection}
@@ -264,6 +264,7 @@ const AppContent = () => {
                             onRegionClick={handleRegionClick}
                             selectedRegion={filterState}
                             electionSelectors={electionSelectors}
+                            showLanguageControl={true}
                         />
                     </div>
                     {/* CCAA Grid - separate scrollable section */}
@@ -325,12 +326,8 @@ const AppContent = () => {
                 <div className="header-logo-container">
                     <img src="/logo_horiz.png" alt="ELECTOSTΔTICA" className="header-logo" />
                     <div className="copyright-mobile">
-                        © Electostatica · <a href="https://github.com/cayetanomarmur" target="_blank" rel="noopener noreferrer">Author</a>
+                        © Electostatica · <a href="https://github.com/cayetanomarmur" target="_blank" rel="noopener noreferrer">Cayetano Martínez Muriel</a>
                     </div>
-                </div>
-                <div className="copyright-desktop">
-                    <div>© Electostatica</div>
-                    <div>Author: <a href="https://github.com/cayetanomarmur" target="_blank" rel="noopener noreferrer">Cayetano Martínez Muriel</a></div>
                 </div>
                 <div className="header-controls">
                     <nav className="nav-menu">
@@ -340,37 +337,58 @@ const AppContent = () => {
                             value={currentView}
                             onChange={(e) => setCurrentView(e.target.value)}
                         >
-                            <option value="dashboard">Dashboard</option>
-                            <option value="trends">Tendencias</option>
-                            <option value="comparison">Multimapa</option>
-                            <option value="constructor">Constructor</option>
+                            <option value="dashboard">{t('dashboard')}</option>
+                            <option value="trends">{t('trends')}</option>
+                            <option value="comparison">{t('multimap')}</option>
+                            <option value="constructor">{t('constructor')}</option>
                         </select>
                         {/* Desktop buttons */}
                         <button
                             className={`nav-btn nav-desktop ${currentView === 'dashboard' ? 'active' : ''}`}
                             onClick={() => setCurrentView('dashboard')}
                         >
-                            Dashboard
+                            {t('dashboard')}
                         </button>
                         <button
                             className={`nav-btn nav-desktop ${currentView === 'trends' ? 'active' : ''}`}
                             onClick={() => setCurrentView('trends')}
                         >
-                            Tendencias
+                            {t('trends')}
                         </button>
                         <button
                             className={`nav-btn nav-desktop ${currentView === 'comparison' ? 'active' : ''}`}
                             onClick={() => setCurrentView('comparison')}
                         >
-                            Multimapa
+                            {t('multimap')}
                         </button>
                         <button
                             className={`nav-btn nav-desktop ${currentView === 'constructor' ? 'active' : ''}`}
                             onClick={() => setCurrentView('constructor')}
                         >
-                            Constructor
+                            {t('constructor')}
                         </button>
                     </nav>
+                </div>
+                {/* Right section: language selector + copyright */}
+                <div className="header-right-section" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                    <select
+                        className="premium-select lang-select-desktop nav-desktop"
+                        value={lang}
+                        onChange={(e) => setLang(e.target.value)}
+                        style={{
+                            padding: '0.5rem 1.3rem',
+                            fontSize: '0.7rem',
+                            minWidth: 'auto',
+                            width: 'auto'
+                        }}
+                    >
+                        <option value="es">ES</option>
+                        <option value="en">EN</option>
+                    </select>
+                    <div className="copyright-desktop">
+                        <div>© Electostatica</div>
+                        <div>Author: <a href="https://github.com/cayetanomarmur" target="_blank" rel="noopener noreferrer">Cayetano Martínez Muriel</a></div>
+                    </div>
                 </div>
             </header>
             <main className="main-content">

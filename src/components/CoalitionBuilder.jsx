@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { getPartyInfo } from '../utils/partyColors';
+import { useLanguage } from '../context/LanguageContext';
 
 /**
  * CoalitionBuilder - Interactive tool to select parties and check majority
  * Supports 3 states: Favor (Yes), Abstention (Abst), Against (No)
  */
 const CoalitionBuilder = ({ results, candidacies }) => {
+    const { t } = useLanguage();
     // State: { partyCode: 'yes' | 'abst' | 'no' }
     const [partyStatus, setPartyStatus] = useState({});
 
@@ -15,7 +17,7 @@ const CoalitionBuilder = ({ results, candidacies }) => {
     }, [results]);
 
     if (!results || !results.seats || !candidacies) {
-        return <div className="coalition-loading">Cargando datos...</div>;
+        return <div className="coalition-loading">{t('loading')}</div>;
     }
 
     // Build party list with seats - AGGREGATED by normalized name
@@ -56,7 +58,7 @@ const CoalitionBuilder = ({ results, candidacies }) => {
         .sort((a, b) => b.seats - a.seats);
 
     if (parties.length === 0) {
-        return <div style={{ padding: '1rem', opacity: 0.5 }}>No hay escaños disponibles en esta vista.</div>;
+        return <div style={{ padding: '1rem', opacity: 0.5 }}>{t('no_seats_available')}</div>;
     }
 
     // Calculate majority threshold based on AVAILABLE seats in this view
@@ -97,7 +99,7 @@ const CoalitionBuilder = ({ results, candidacies }) => {
     return (
         <div className="coalition-builder">
             <div className="coalition-header" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'relative', marginBottom: '0.5rem' }}>
-                <h3 style={{ textAlign: 'center', margin: 0 }}>Constructor de Coaliciones</h3>
+                <h3 style={{ textAlign: 'center', margin: 0 }}>{t('coalition_builder')}</h3>
                 <button className="clear-btn" onClick={clearAll} style={{
                     position: 'absolute',
                     right: 0,
@@ -108,7 +110,7 @@ const CoalitionBuilder = ({ results, candidacies }) => {
                     borderRadius: '4px',
                     fontSize: '0.65rem',
                     cursor: 'pointer'
-                }}>Limpiar</button>
+                }}>{t('clear')}</button>
             </div>
 
             {/* Results Area with Background */}
@@ -124,14 +126,14 @@ const CoalitionBuilder = ({ results, candidacies }) => {
                     <div className="coalition-bar-multi">
                         {/* Yes Segments */}
                         {parties.filter(p => getStatus(p.code) === 'yes').map(p => (
-                            <div key={p.code} className="bar-segment yes" style={{ width: `${(p.seats / totalSeats) * 100}%`, backgroundColor: p.color }} title={`${p.siglas}: A favor`}></div>
+                            <div key={p.code} className="bar-segment yes" style={{ width: `${(p.seats / totalSeats) * 100}%`, backgroundColor: p.color }} title={`${p.siglas}: ${t('in_favor')}`}></div>
                         ))}
                         {/* Abst Segments (Party color with stripes) */}
                         {parties.filter(p => getStatus(p.code) === 'abst').map(p => (
                             <div key={p.code} className="bar-segment abst" style={{
                                 width: `${(p.seats / totalSeats) * 100}%`,
                                 background: `repeating-linear-gradient(-45deg, ${p.color}, ${p.color} 6px, rgba(0,0,0,0.6) 6px, rgba(0,0,0,0.6) 12px)`
-                            }} title={`${p.siglas}: Abstención`}></div>
+                            }} title={`${p.siglas}: ${t('abstention_full')}`}></div>
                         ))}
                         {/* No Segments - Displaying standard grey/red for No */}
                         <div className="bar-segment no" style={{ flex: 1, backgroundColor: 'rgba(255, 255, 255, 0.1)' }}></div>
@@ -144,15 +146,15 @@ const CoalitionBuilder = ({ results, candidacies }) => {
                 {/* Counters */}
                 <div className="coalition-stats">
                     <div className="stat-group yes">
-                        <span className="stat-label">A favor</span>
+                        <span className="stat-label">{t('in_favor')}</span>
                         <span className="stat-value">{sums.yes}</span>
                     </div>
                     <div className="stat-group abst">
-                        <span className="stat-label">Abst.</span>
+                        <span className="stat-label">{t('abstention')}</span>
                         <span className="stat-value">{sums.abst}</span>
                     </div>
                     <div className="stat-group no">
-                        <span className="stat-label">En contra</span>
+                        <span className="stat-label">{t('against')}</span>
                         <span className="stat-value">{sums.no}</span>
                     </div>
                 </div>
@@ -165,21 +167,21 @@ const CoalitionBuilder = ({ results, candidacies }) => {
                             fontSize: '0.85rem',
                             fontWeight: 600,
                             textShadow: '0 0 10px rgba(0, 255, 136, 0.5)'
-                        }}>✓ Mayoría Absoluta ({sums.yes} ≥ {majoritySeats})</span>
+                        }}>✓ {t('absolute_majority')} ({sums.yes} ≥ {majoritySeats})</span>
                     ) : hasSimpleMajority ? (
                         <span style={{
                             color: '#00bfff',
                             fontSize: '0.85rem',
                             fontWeight: 600,
                             textShadow: '0 0 10px rgba(0, 191, 255, 0.5)'
-                        }}>✓ Mayoría Simple ({sums.yes} &gt; {sums.no})</span>
+                        }}>✓ {t('simple_majority')} ({sums.yes} &gt; {sums.no})</span>
                     ) : (
                         <span style={{
                             color: '#ff6b6b',
                             fontSize: '0.85rem',
                             fontWeight: 600,
                             textShadow: '0 0 10px rgba(255, 107, 107, 0.4)'
-                        }}>✗ Sin Mayoría</span>
+                        }}>✗ {t('no_majority')}</span>
                     )}
                 </div>
             </div>
@@ -218,9 +220,9 @@ const CoalitionBuilder = ({ results, candidacies }) => {
                                 <span className="party-seats" style={{ color: textColor, opacity: status !== 'no' ? 0.9 : 1 }}>{p.seats}</span>
                             </div>
                             <div className="party-status-indicator">
-                                {status === 'yes' && <span className="status-pill yes" style={{ background: 'transparent', color: 'white' }}>SÍ</span>}
-                                {status === 'abst' && <span className="status-pill abst" style={{ background: 'rgba(0,0,0,0.5)', color: 'white' }}>ABST</span>}
-                                {status === 'no' && <span className="status-pill no">NO</span>}
+                                {status === 'yes' && <span className="status-pill yes" style={{ background: 'transparent', color: 'white' }}>{t('yes')}</span>}
+                                {status === 'abst' && <span className="status-pill abst" style={{ background: 'rgba(0,0,0,0.5)', color: 'white' }}>{t('abst')}</span>}
+                                {status === 'no' && <span className="status-pill no">{t('no')}</span>}
                             </div>
                         </div>
                     );

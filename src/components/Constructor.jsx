@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { normalizeParty } from '../utils/partyUtils';
 import SavedPredictions from './SavedPredictions';
+import { useLanguage } from '../context/LanguageContext';
 
 /**
  * Constructor v3 - With Election Selection
@@ -10,6 +11,7 @@ import SavedPredictions from './SavedPredictions';
  * - Scenario Bar for quick switching
  */
 const Constructor = () => {
+    const { t } = useLanguage();
     // Election selection state
     const [elections, setElections] = useState([]);
     const [electionType, setElectionType] = useState('congreso');
@@ -111,12 +113,12 @@ const Constructor = () => {
     };
 
     if (loading && !electionData) {
-        return <div className="constructor-loading">Cargando datos...</div>;
+        return <div className="constructor-loading">{t('loading')}</div>;
     }
 
     // Determine if current election is municipales
     const isMunicipales = electionData?.metadata?.isMunicipales;
-    const seatLabel = isMunicipales ? 'Municipios' : 'Escaños';
+    const seatLabel = isMunicipales ? t('municipalities_label') : t('seats');
     const maxSeats = isMunicipales ? 8131 : 350;
     const majoritySeats = isMunicipales ? Math.ceil(maxSeats / 2) : 176;
 
@@ -289,7 +291,7 @@ const Constructor = () => {
         <div className={layoutClass}>
             <div className="constructor-main">
                 <div className="constructor-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <h3>Constructor de Coaliciones</h3>
+                    <h3>{t('coalition_builder')}</h3>
                     <button className="reset-btn" onClick={resetToOriginal} style={{
                         background: 'transparent',
                         border: '1px solid var(--surface-border)',
@@ -298,7 +300,7 @@ const Constructor = () => {
                         borderRadius: '4px',
                         fontSize: '0.75rem',
                         cursor: 'pointer'
-                    }}>Reiniciar</button>
+                    }}>{t('reset')}</button>
                 </div>
 
                 {/* Election Selection - Single Line Compact */}
@@ -313,20 +315,20 @@ const Constructor = () => {
                     border: '1px solid var(--surface-border)'
                 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                        <label style={{ opacity: 0.7, fontSize: '0.75rem', whiteSpace: 'nowrap' }}>Tipo:</label>
+                        <label style={{ opacity: 0.7, fontSize: '0.75rem', whiteSpace: 'nowrap' }}>{t('type')}</label>
                         <select
                             className="premium-select compact"
                             value={electionType}
                             onChange={(e) => handleTypeChange(e.target.value)}
                             style={{ minWidth: '100px' }}
                         >
-                            <option value="congreso">Congreso</option>
-                            <option value="municipales">Municipales</option>
+                            <option value="congreso">{t('congreso')}</option>
+                            <option value="municipales">{t('municipales')}</option>
                         </select>
                     </div>
                     <div style={{ height: '20px', width: '1px', background: 'var(--surface-border)' }}></div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flex: 1 }}>
-                        <label style={{ opacity: 0.7, fontSize: '0.75rem', whiteSpace: 'nowrap' }}>Elección Base:</label>
+                        <label style={{ opacity: 0.7, fontSize: '0.75rem', whiteSpace: 'nowrap' }}>{t('base_election')}</label>
                         <select
                             className="premium-select compact"
                             value={selectedElectionId}
@@ -341,8 +343,8 @@ const Constructor = () => {
                 </div>
 
                 <p className="constructor-description" style={{ marginBottom: '1rem', fontSize: '0.8rem' }}>
-                    Modifica los {seatLabel.toLowerCase()} y selecciona partidos para ver la mayoría.
-                    {isMunicipales && <span style={{ opacity: 0.7 }}> (Mayoría: {majoritySeats}+ municipios)</span>}
+                    {t('modify_seats_desc')} {seatLabel.toLowerCase()} {t('and_select_parties')}
+                    {isMunicipales && <span style={{ opacity: 0.7 }}> ({t('majority_threshold')} {majoritySeats}+ {t('municipalities_threshold')})</span>}
                 </p>
 
                 {/* Save Scenario Form */}
@@ -353,7 +355,7 @@ const Constructor = () => {
                 }}>
                     <input
                         type="text"
-                        placeholder="Nombre del escenario..."
+                        placeholder={t('scenario_name')}
                         value={scenarioName}
                         onChange={e => setScenarioName(e.target.value)}
                         className="premium-input"
@@ -378,7 +380,7 @@ const Constructor = () => {
                         cursor: (scenarioName || suggestedScenarioName) ? 'pointer' : 'not-allowed',
                         opacity: (scenarioName || suggestedScenarioName) ? 1 : 0.5
                     }}>
-                        Guardar
+                        {t('save')}
                     </button>
                 </div>
 
@@ -392,11 +394,11 @@ const Constructor = () => {
                 }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
                         <div style={{ fontSize: '0.85rem' }}>
-                            <strong>Coalición:</strong> {selectedPartiesList.map(p => p.siglas).join(' + ') || 'Ninguna'}
-                            {abstPartiesList.length > 0 && <span style={{ opacity: 0.7 }}> (+ {abstPartiesList.length} Abs)</span>}
+                            <strong>{t('coalition')}</strong> {selectedPartiesList.map(p => p.siglas).join(' + ') || t('none')}
+                            {abstPartiesList.length > 0 && <span style={{ opacity: 0.7 }}> (+ {abstPartiesList.length} {t('abs')})</span>}
                         </div>
                         <div style={{ fontSize: '1rem', fontWeight: 'bold' }}>
-                            {sumYes} / {majoritySeats} ({sumAbst} Abs)
+                            {sumYes} / {majoritySeats} ({sumAbst} {t('abs')})
                         </div>
                     </div>
 
@@ -434,12 +436,12 @@ const Constructor = () => {
                     <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
                         {hasMajority && (
                             <div style={{ color: '#00ff88', fontSize: '0.85rem', fontWeight: 600, textShadow: '0 0 10px rgba(0, 255, 136, 0.5)' }}>
-                                ✓ Mayoría Absoluta
+                                ✓ {t('absolute_majority')}
                             </div>
                         )}
                         {!hasMajority && hasSimpleMajority && (
                             <div style={{ color: '#00bfff', fontSize: '0.85rem', fontWeight: 600, textShadow: '0 0 10px rgba(0, 191, 255, 0.5)' }}>
-                                ✓ Mayoría Simple
+                                ✓ {t('simple_majority')}
                             </div>
                         )}
                     </div>
@@ -577,7 +579,7 @@ const Constructor = () => {
                                 borderRadius: '50%',
                                 background: 'repeating-linear-gradient(45deg, #666, #666 2px, transparent 2px, transparent 4px)'
                             }}></span>
-                            <span style={{ fontWeight: 500, opacity: 0.7 }}>Abstención</span>
+                            <span style={{ fontWeight: 500, opacity: 0.7 }}>{t('abstention_full')}</span>
                         </div>
                         <input
                             type="range"
@@ -619,7 +621,7 @@ const Constructor = () => {
                             }
                         }}
                     >
-                        <option value="">+ Añadir partido...</option>
+                        <option value="">{t('add_party')}</option>
                         {allElectionParties.map(pId => {
                             if (customSeats[pId] !== undefined) return null;
                             const norm = normalizeParty(pId);
@@ -630,10 +632,10 @@ const Constructor = () => {
 
                 {/* Total Summary */}
                 <div style={{ marginTop: '1.5rem', padding: '1rem', background: 'var(--surface)', borderRadius: '8px' }}>
-                    <strong>Total {seatLabel}:</strong> {totalSeats}
+                    <strong>{t('total_seats')} {seatLabel}:</strong> {totalSeats}
                     {!isMunicipales && totalSeats !== 350 && (
                         <span style={{ color: 'orange', marginLeft: '1rem' }}>
-                            ⚠ El total debería ser 350
+                            ⚠ {t('should_be_350')}
                         </span>
                     )}
                 </div>

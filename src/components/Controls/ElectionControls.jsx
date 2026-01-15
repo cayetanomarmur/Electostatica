@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { communities, provinces } from '../../utils/regionData';
+import { useLanguage } from '../../context/LanguageContext';
 
 const ElectionControls = ({
     elections,
@@ -9,6 +10,7 @@ const ElectionControls = ({
     onFilterChange,
     electionData
 }) => {
+    const { t } = useLanguage();
     const { ccaa, prov, mun } = filterState;
 
     // Derive election type from current selection
@@ -85,14 +87,14 @@ const ElectionControls = ({
             <div className="filters-row" style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', alignItems: 'end' }}>
                 {/* CCAA Selector */}
                 <div className="control-item" style={{ flex: 1, minWidth: '150px' }}>
-                    <label style={{ display: 'block', marginBottom: '0.3rem', fontSize: '0.75rem', opacity: 0.7 }}>Comunidad</label>
+                    <label style={{ display: 'block', marginBottom: '0.3rem', fontSize: '0.75rem', opacity: 0.7 }}>{t('community')}</label>
                     <select
                         className="premium-select"
                         value={ccaa}
                         onChange={handleCCAAChange}
                         style={{ width: '100%' }}
                     >
-                        <option value="">Nacional</option>
+                        <option value="">{t('national')}</option>
                         {Object.entries(communities)
                             .sort((a, b) => a[1].localeCompare(b[1]))
                             .map(([code, name]) => (
@@ -103,7 +105,7 @@ const ElectionControls = ({
 
                 {/* Province Selector */}
                 <div className="control-item" style={{ flex: 1, minWidth: '150px' }}>
-                    <label style={{ display: 'block', marginBottom: '0.3rem', fontSize: '0.75rem', opacity: 0.7 }}>Provincia</label>
+                    <label style={{ display: 'block', marginBottom: '0.3rem', fontSize: '0.75rem', opacity: 0.7 }}>{t('province')}</label>
                     <select
                         className="premium-select"
                         value={prov}
@@ -111,7 +113,7 @@ const ElectionControls = ({
                         disabled={!availableProvinces.length && !ccaa}
                         style={{ width: '100%' }}
                     >
-                        <option value="">Todas</option>
+                        <option value="">{t('all_fem')}</option>
                         {availableProvinces.map(([code, data]) => (
                             <option key={code} value={code}>{data.name}</option>
                         ))}
@@ -120,7 +122,7 @@ const ElectionControls = ({
 
                 {/* Municipality Selector */}
                 <div className="control-item" style={{ flex: 1, minWidth: '150px' }}>
-                    <label style={{ display: 'block', marginBottom: '0.3rem', fontSize: '0.75rem', opacity: 0.7 }}>Municipio</label>
+                    <label style={{ display: 'block', marginBottom: '0.3rem', fontSize: '0.75rem', opacity: 0.7 }}>{t('municipality')}</label>
                     <select
                         className="premium-select"
                         value={mun}
@@ -128,7 +130,7 @@ const ElectionControls = ({
                         disabled={!availableMunicipalities.length}
                         style={{ width: '100%' }}
                     >
-                        <option value="">Todos</option>
+                        <option value="">{t('all_masc')}</option>
                         {availableMunicipalities.map(m => (
                             <option key={m.id} value={m.id}>{m.name}</option>
                         ))}

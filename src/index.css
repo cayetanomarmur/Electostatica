@@ -86,6 +86,17 @@ h3 {
   display: flex;
 }
 
+/* Tablet - use mobile-style controls */
+@media (max-width: 1400px) and (min-width: 701px) {
+  .mobile-only {
+    display: flex !important;
+  }
+
+  .desktop-only {
+    display: none !important;
+  }
+}
+
 .mobile-hide {
   /* Visible by default, hidden on mobile via media query */
 }
@@ -137,14 +148,11 @@ h3 {
 
 /* Copyright - Desktop (top-right) */
 .copyright-desktop {
-  position: absolute;
-  top: 50%;
-  right: 2rem;
-  transform: translateY(-50%);
   text-align: right;
   font-size: 0.65rem;
   color: var(--text-muted);
   line-height: 1.4;
+  flex-shrink: 0;
 }
 
 .copyright-desktop a {
@@ -170,7 +178,7 @@ h3 {
   text-decoration: none;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 700px) {
   .copyright-desktop {
     display: none;
   }
@@ -221,7 +229,7 @@ h3 {
 }
 
 /* Desktop - show buttons, hide dropdown */
-@media (min-width: 641px) {
+@media (min-width: 1401px) {
   .nav-mobile-select {
     display: none;
   }
@@ -231,8 +239,122 @@ h3 {
   }
 }
 
+/* Tablet - switch to dropdown earlier to prevent logo collision */
+@media (max-width: 1400px) and (min-width: 701px) {
+  .nav-mobile-select {
+    display: block;
+    padding: 0.5rem 2rem 0.5rem 1rem;
+    font-size: 0.85rem;
+    min-width: 100px;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.5rem center;
+    background-size: 12px;
+  }
+
+  .nav-desktop {
+    display: none;
+  }
+
+  /* Hide desktop language selector on tablet */
+  .lang-select-desktop {
+    display: none !important;
+  }
+
+  /* Map Controls - tablet layout (same as mobile) */
+  .map-controls {
+    flex-direction: column;
+    gap: 0.5rem;
+    top: 0.5rem;
+    left: 0.5rem;
+    right: auto;
+    position: relative;
+    padding: 0.5rem;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 8px;
+    width: auto;
+    max-width: 400px;
+  }
+
+  .map-controls-left.desktop-only,
+  .map-controls-right.desktop-only {
+    display: none !important;
+  }
+
+  .map-controls-mobile.mobile-only {
+    display: grid !important;
+    grid-template-columns: 1fr 1.2fr 0.8fr;
+    /* 3 Columns: Levels, Elections, Lang */
+    gap: 0.5rem;
+    width: 100%;
+    align-items: start;
+  }
+
+  /* Reset flex layout for inner columns */
+  .control-col-levels,
+  .control-col-elections,
+  .control-col-lang {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    width: 100%;
+  }
+
+  /* Wrapper for Row 2 components - invisible on Tablet so Grid works */
+  .control-row-2 {
+    display: contents;
+  }
+
+  .mobile-level-buttons {
+    display: flex;
+    flex-direction: column;
+    /* Stack buttons vertically in column 1 */
+    gap: 0.25rem;
+    width: 100%;
+  }
+
+  .mobile-level-buttons button {
+    font-size: 0.7rem;
+    padding: 0.3rem 0.5rem;
+    pointer-events: auto;
+    width: 100%;
+    text-align: center;
+  }
+
+  .mobile-election-selectors {
+    display: flex;
+    flex-direction: column;
+    /* Stack selectors vertically in column 2 */
+    gap: 0.25rem;
+    width: 100%;
+    pointer-events: auto;
+  }
+
+  /* Force vertical stacking of the wrapper inside mobile-election-selectors for tablet */
+  .mobile-election-selectors .election-selectors-wrapper {
+    flex-direction: column !important;
+    width: 100%;
+  }
+
+  .mobile-election-selectors select {
+    font-size: 0.7rem;
+    padding: 0.3rem 0.5rem;
+    width: 100%;
+    max-width: none;
+  }
+
+  /* Column 3: Language + Seats */
+  .control-col-lang {
+    align-items: center;
+  }
+}
+
 /* Mobile - show dropdown, hide buttons */
-@media (max-width: 640px) {
+@media (max-width: 700px) {
+
+  /* ... existing styles ... */
   .nav-mobile-select {
     display: block;
     padding: 0.5rem 2rem 0.5rem 1rem;
@@ -248,6 +370,134 @@ h3 {
 
   .nav-desktop {
     display: none;
+  }
+
+  /* Hide desktop language selector on mobile */
+  .lang-select-desktop {
+    display: none !important;
+  }
+
+  /* Show mobile language selector in map */
+  .lang-select-map {
+    display: block !important;
+  }
+
+  /* MOBILE LAYOUT: 2 Rows */
+  /* Row 1: Levels */
+  /* Row 2: Wrapper for Elections + Lang (Centered) */
+
+  .map-controls-mobile.mobile-only {
+    display: flex !important;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  /* Row 1: Levels take full width */
+  .control-col-levels {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .mobile-level-buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 0.25rem;
+    width: auto;
+  }
+
+  .mobile-level-buttons button {
+    font-size: 0.7rem;
+    padding: 0.35rem 0.6rem;
+    pointer-events: auto;
+    width: auto;
+  }
+
+  /* Row 2: Wrapper for Elections + Lang */
+  .control-row-2 {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+    flex-wrap: nowrap;
+    /* Force single line! */
+  }
+
+  /* Inner Columns */
+  .control-col-elections,
+  .control-col-lang {
+    width: auto;
+    display: flex;
+    align-items: center;
+  }
+
+  /* Ensure Elections are horizontal */
+  .mobile-election-selectors {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: auto;
+  }
+
+  .mobile-election-selectors .election-selectors-wrapper {
+    flex-direction: row !important;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  .mobile-election-selectors select {
+    font-size: 0.7rem;
+    padding: 0.3rem 0.5rem;
+    width: auto;
+    min-width: unset;
+  }
+
+  /* MultiMap - Single Column on Mobile */
+  .map-card-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 350px !important;
+    /* Reduced by ~25% from 550px */
+  }
+
+  /* Hide resize handle on mobile */
+  .map-card-container .resize-handle {
+    display: none !important;
+  }
+
+  /* Lang control - horizontal */
+  .control-col-lang {
+    gap: 0.5rem;
+  }
+
+  .control-col-lang select {
+    padding: 0.3rem 0.5rem;
+    font-size: 0.7rem;
+    width: auto;
+    margin-bottom: 0;
+  }
+
+  /* Seats toggle: hide text on mobile to save space? Or just keep it. */
+  .control-col-lang label {
+    font-size: 0.7rem;
+    white-space: nowrap;
+  }
+
+  /* Move map down slightly as requested */
+  .map-view svg {
+    margin-top: 0.333rem;
+  }
+}
+
+/* Tablet specific adjustment for map container */
+@media (max-width: 1400px) and (min-width: 701px) {
+  .map-view svg {
+    margin-top: 1rem;
   }
 }
 
@@ -478,11 +728,16 @@ h3 {
 }
 
 /* Map Components */
+.election-selectors-wrapper {
+  display: flex;
+  gap: 0.5rem;
+}
+
 .map-view {
   width: 100%;
   height: 100%;
   position: absolute;
-  top: 0;
+  top: 0rem;
   left: 0;
   right: 0;
   bottom: 0;
@@ -511,6 +766,10 @@ h3 {
   pointer-events: auto;
   display: flex;
   gap: 0.5rem;
+}
+
+.map-controls-right {
+  margin-right: 1.25rem;
 }
 
 
@@ -547,7 +806,7 @@ h3 {
 
 .zoom-controls {
   position: absolute;
-  top: 4rem;
+  top: 8rem;
   right: 1rem;
   display: flex;
   flex-direction: column;
@@ -762,7 +1021,7 @@ h3 {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  height: 550px;
+  height: 700px;
 }
 
 .map-card-header {
@@ -1195,7 +1454,7 @@ h3 {
    MOBILE RESPONSIVE STYLES (iPhone/Mobile)
    ============================================ */
 
-@media (max-width: 768px) {
+@media (max-width: 700px) {
 
   /* Toggle desktop/mobile visibility */
   .mobile-only {
@@ -1262,7 +1521,7 @@ h3 {
 
   .map-view {
     position: relative;
-    height: 300px;
+    height: 250px;
   }
 
   /* CCAA Grid - directly under map with no gap */
@@ -1401,6 +1660,15 @@ h3 {
 
   .constructor-layout.split-view {
     grid-template-columns: 1fr;
+  }
+
+  .constructor-side-panel {
+    order: -1;
+    margin-bottom: 1rem;
+    height: auto;
+    max-height: 300px;
+    /* Limit height so it doesn't take over screen? User said 'above', assume full list ok but maybe scrollable */
+    overflow-y: auto;
   }
 
   .constructor-main {
@@ -1613,7 +1881,22 @@ h3 {
   filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.3));
 }
 
-@media (max-width: 640px) {
+/* Tablet - flush left like mobile */
+@media (max-width: 1400px) and (min-width: 701px) {
+  .header-logo-container {
+    position: static;
+    transform: none;
+    justify-content: flex-start;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .header-logo {
+    height: 24px;
+  }
+}
+
+@media (max-width: 700px) {
   .header-logo-container {
     /* Flush left on mobile, stack vertically */
     position: static;
@@ -1621,6 +1904,7 @@ h3 {
     justify-content: flex-start;
     flex-direction: column;
     align-items: flex-start;
+    margin-top: 0.2rem;
   }
 
   .header-logo {

@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { normalizeParty } from '../../utils/partyUtils';
 import { provinces as provinceData } from '../../utils/regionData';
+import { useLanguage } from '../../context/LanguageContext';
 
 const ElectionSummary = ({ results, candidacies, elections, selectedElectionId, electionData, filterState }) => {
+    const { t } = useLanguage();
     const [compareElectionId, setCompareElectionId] = useState(null);
     const [compareElectionData, setCompareElectionData] = useState(null);
     const [hoveredParty, setHoveredParty] = useState(null);
@@ -12,13 +14,13 @@ const ElectionSummary = ({ results, candidacies, elections, selectedElectionId, 
     if (!results || !candidacies) {
         return (
             <div className="election-summary loading">
-                <div style={{ padding: '1rem', textAlign: 'center', opacity: 0.5 }}>Cargando datos...</div>
+                <div style={{ padding: '1rem', textAlign: 'center', opacity: 0.5 }}>{t('loading')}</div>
             </div>
         );
     }
 
     const isMunicipales = results.isMunicipales;
-    const seatsLabel = isMunicipales ? 'Municipios' : 'Escaños';
+    const seatsLabel = isMunicipales ? t('municipalities_label') : t('seats');
 
     // Get current election
     const currentElection = useMemo(() =>
@@ -241,7 +243,7 @@ const ElectionSummary = ({ results, candidacies, elections, selectedElectionId, 
                     background: 'var(--surface)',
                     borderRadius: '6px'
                 }}>
-                    <span style={{ opacity: 0.6 }}>Comparar:</span>
+                    <span style={{ opacity: 0.6 }}>{t('compare')}</span>
                     <select
                         className="premium-select"
                         value={compareElectionId || ''}
@@ -260,7 +262,7 @@ const ElectionSummary = ({ results, candidacies, elections, selectedElectionId, 
                     >
                         <option value="pct">%</option>
                         <option value="seats">{seatsLabel}</option>
-                        <option value="votes">Votos</option>
+                        <option value="votes">{t('votes')}</option>
                     </select>
                 </div>
             )}
@@ -269,14 +271,14 @@ const ElectionSummary = ({ results, candidacies, elections, selectedElectionId, 
                 <table className="party-table" style={{ tableLayout: 'fixed', width: '100%' }}>
                     <thead>
                         <tr>
-                            <th style={{ textAlign: 'left', width: '90px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>Partido</th>
+                            <th style={{ textAlign: 'left', width: '90px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{t('party')}</th>
                             {hasComparison && <th style={{ width: '120px' }}></th>}
                             <th
                                 className="mobile-hide"
                                 style={{ textAlign: 'right', width: '80px', cursor: 'pointer', userSelect: 'none' }}
                                 onClick={() => setSortBy('votes')}
                             >
-                                Votos {sortBy === 'votes' && '▼'}
+                                {t('votes')} {sortBy === 'votes' && '▼'}
                             </th>
                             <th
                                 style={{ textAlign: 'right', width: '50px', cursor: 'pointer', userSelect: 'none' }}
@@ -394,7 +396,7 @@ const ElectionSummary = ({ results, candidacies, elections, selectedElectionId, 
                         {/* Others row */}
                         {othersCount > 0 && (
                             <tr style={{ opacity: 0.7, fontStyle: 'italic' }}>
-                                <td>Otros ({othersCount} partidos)</td>
+                                <td>{t('others')} ({othersCount} {t('parties')})</td>
                                 {hasComparison && <td></td>}
                                 <td className="mobile-hide" style={{ textAlign: 'right' }}>{othersVotes.toLocaleString()}</td>
                                 <td style={{ textAlign: 'right' }}>{othersPct.toFixed(1)}%</td>
@@ -406,11 +408,11 @@ const ElectionSummary = ({ results, candidacies, elections, selectedElectionId, 
                     </tbody>
                     <tfoot>
                         <tr style={{ borderTop: '2px solid var(--surface-border)', fontWeight: 600 }}>
-                            <td>TOTAL</td>
+                            <td>{t('total')}</td>
                             {hasComparison && (
                                 <td style={{ textAlign: 'center', fontSize: '0.75rem', color: 'var(--primary)' }}>
                                     {electionData?.metadata?.censo > 0 && electionData?.metadata?.total_votos > 0 && (
-                                        <span style={{ fontFamily: 'inherit', fontSize: '1rem' }}>Participación: {((electionData.metadata.total_votos / electionData.metadata.censo) * 100).toFixed(2)}%</span>
+                                        <span style={{ fontFamily: 'inherit', fontSize: '1rem' }}>{t('participation')}: {((electionData.metadata.total_votos / electionData.metadata.censo) * 100).toFixed(2)}%</span>
                                     )}
                                 </td>
                             )}

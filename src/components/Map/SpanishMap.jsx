@@ -7,14 +7,14 @@ import { normalizeParty, deduplicateResults } from '../../utils/partyUtils';
 // Cache for geo data to avoid re-fetching (especially the 72MB municipalities.geojson)
 const geoCache = {};
 
-const SpanishMap = ({ electionId, onRegionClick, selectedRegion, electionSelectors }) => {
+const SpanishMap = ({ electionId, onRegionClick, selectedRegion, electionSelectors, showLanguageControl = false, extraControls, dragHandle }) => {
     const svgRef = useRef();
     const zoomRef = useRef(null);
     const [geoData, setGeoData] = useState(null);
     const [electionResults, setElectionResults] = useState(null);
     const [level, setLevel] = useState('communities');
     const [showSeatCircles, setShowSeatCircles] = useState(false); // Optional seat circles overlay
-    const { t } = useLanguage();
+    const { t, lang, setLang } = useLanguage();
 
     useEffect(() => {
         // Use .json (TopoJSON) for all levels
@@ -218,7 +218,7 @@ const SpanishMap = ({ electionId, onRegionClick, selectedRegion, electionSelecto
                 .attr('y', height / 2)
                 .attr('text-anchor', 'middle')
                 .attr('fill', 'white')
-                .text(`No hay mapa disponible para ${level}`);
+                .text(`${t('no_map_available')} ${t(level)}`);
             return;
         }
 
@@ -577,13 +577,13 @@ const SpanishMap = ({ electionId, onRegionClick, selectedRegion, electionSelecto
                 {/* Desktop Controls - buttons in a row */}
                 <div className="map-controls-left desktop-only">
                     <button onClick={() => setLevel('communities')} className={level === 'communities' ? 'active' : ''}>
-                        Comunidades
+                        {t('communities')}
                     </button>
                     <button onClick={() => setLevel('provinces')} className={level === 'provinces' ? 'active' : ''}>
-                        Provincias
+                        {t('provinces')}
                     </button>
                     <button onClick={() => setLevel('municipalities')} className={level === 'municipalities' ? 'active' : ''}>
-                        Municipios
+                        {t('municipalities')}
                     </button>
                     {/* Seat circles toggle - only for Comunidades/Provincias and Congreso elections */}
                     {level !== 'municipalities' && !electionId?.startsWith('municipales') && (
@@ -594,30 +594,74 @@ const SpanishMap = ({ electionId, onRegionClick, selectedRegion, electionSelecto
                                 onChange={(e) => setShowSeatCircles(e.target.checked)}
                                 style={{ cursor: 'pointer' }}
                             />
-                            Mostrar escaños
+                            {t('show_seats')}
                         </label>
                     )}
                 </div>
 
-                {/* Mobile Controls - centered buttons row */}
+                {/* Mobile/Tablet Controls - 3 columns on tablet, stacked on mobile */}
                 <div className="map-controls-mobile mobile-only" style={{ display: 'none' }}>
-                    <div className="mobile-level-buttons">
-                        <button onClick={() => setLevel('communities')} className={level === 'communities' ? 'active' : ''}>
-                            Comunidades
-                        </button>
-                        <button onClick={() => setLevel('provinces')} className={level === 'provinces' ? 'active' : ''}>
-                            Provincias
-                        </button>
-                        <button onClick={() => setLevel('municipalities')} className={level === 'municipalities' ? 'active' : ''}>
-                            Municipios
-                        </button>
-                    </div>
-                    {electionSelectors && (
-                        <div className="mobile-election-selectors">
-                            {electionSelectors}
+                    {/* Column 1: Level buttons */}
+                    <div className="control-col-levels">
+                        <div className="mobile-level-buttons">
+                            <button onClick={() => setLevel('communities')} className={level === 'communities' ? 'active' : ''}>
+                                {t('communities')}
+                            </button>
+                            <button onClick={() => setLevel('provinces')} className={level === 'provinces' ? 'active' : ''}>
+                                {t('provinces')}
+                            </button>
+                            <button onClick={() => setLevel('municipalities')} className={level === 'municipalities' ? 'active' : ''}>
+                                {t('municipalities')}
+                            </button>
                         </div>
-                    )}
+                    </div>
+
+                    {/* Wrapper for Row 2 (Elections + Language/Actions) - helps centered alignment on mobile */}
+                    <div className="control-row-2">
+                        {/* Column 2: Election Selectors */}
+                        {electionSelectors && (
+                            <div className="control-col-elections">
+                                <div className="mobile-election-selectors">
+                                    {electionSelectors}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Column 3: Language + Seats OR Actions (Only if enabled) */}
+                        {(showLanguageControl || extraControls) && (
+                            <div className="control-col-lang" style={extraControls ? { justifyContent: 'flex-end' } : {}}>
+                                {showLanguageControl ? (
+                                    <>
+                                        <select
+                                            className="premium-select"
+                                            value={lang}
+                                            onChange={(e) => setLang(e.target.value)}
+                                            style={{ padding: '0.3rem 0.5rem', fontSize: '0.7rem' }}
+                                        >
+                                            <option value="es">ES 🇪🇸</option>
+                                            <option value="en">EN 🇬🇧</option>
+                                        </select>
+                                        {level !== 'municipalities' && !electionId?.startsWith('municipales') && (
+                                            <label style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.7rem', cursor: 'pointer', justifyContent: 'center' }}>
+                                                <input
+                                                    type="checkbox"
+                                                    checked={showSeatCircles}
+                                                    onChange={(e) => setShowSeatCircles(e.target.checked)}
+                                                    style={{ cursor: 'pointer' }}
+                                                />
+                                                {t('seats_short')}
+                                            </label>
+                                        )}
+                                    </>
+                                ) : (
+                                    extraControls
+                                )}
+                            </div>
+                        )}
+                    </div>
                 </div>
+
+
 
                 {/* Desktop election selectors */}
                 {electionSelectors && (
@@ -627,41 +671,29 @@ const SpanishMap = ({ electionId, onRegionClick, selectedRegion, electionSelecto
                 )}
             </div>
 
+            {/* Drag Handle (Absolute Top Right for MultiView) */}
+            {dragHandle && (
+                <div style={{ position: 'absolute', top: '0.5rem', right: '0.5rem', zIndex: 100 }}>
+                    {dragHandle}
+                </div>
+            )}
+
             {/* Zoom controls */}
             <div className="zoom-controls">
                 <button onClick={handleZoomIn} title="Zoom In">+</button>
                 <button onClick={handleZoomOut} title="Zoom Out">−</button>
                 <button onClick={handleReset} title="Reset">⟲</button>
+
+                {/* Extra Controls (Download/Remove for MultiView) - Desktop Only in Vertical Panel */}
+                {extraControls && (
+                    <div className="desktop-only" style={{ display: 'flex', flexDirection: 'column', gap: '4px', marginTop: '4px', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '4px' }}>
+                        {extraControls}
+                    </div>
+                )}
             </div>
 
-            {/* Mostrar escaños toggle - inside map, bottom right (above zoom on mobile) */}
-            {level !== 'municipalities' && !electionId?.startsWith('municipales') && (
-                <label className="seats-toggle mobile-only" style={{
-                    display: 'none',
-                    position: 'absolute',
-                    bottom: '10rem',
-                    right: '2.5rem',
-                    background: 'rgba(0,0,0,0.7)',
-                    padding: '0.4rem 0.6rem',
-                    borderRadius: '6px',
-                    fontSize: '0.7rem',
-                    cursor: 'pointer',
-                    alignItems: 'center',
-                    gap: '4px',
-                    zIndex: 15
-                }}>
-                    <input
-                        type="checkbox"
-                        checked={showSeatCircles}
-                        onChange={(e) => setShowSeatCircles(e.target.checked)}
-                        style={{ cursor: 'pointer' }}
-                    />
-                    Escaños
-                </label>
-            )}
-
             <svg ref={svgRef} width="100%" height="100%" viewBox="0 0 700 480" preserveAspectRatio="xMidYMid meet"></svg>
-        </div>
+        </div >
     );
 };
 

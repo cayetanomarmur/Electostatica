@@ -1,8 +1,10 @@
 import React, { useEffect, useRef, useState, useMemo } from 'react';
 import * as d3 from 'd3';
 import { normalizeParty, PARTY_CONFIG } from '../../utils/partyUtils';
+import { useLanguage } from '../../context/LanguageContext';
 
 const TrendChart = ({ data, type, yearRange, onYearRangeChange, selectedParties, onPartyToggle, availableParties, onRemove, showRemove, onTypeChange, width = 800, height = 300 }) => {
+    const { t } = useLanguage();
     const svgRef = useRef();
     const [seatFilter, setSeatFilter] = useState('congreso'); // 'congreso' or 'municipales'
 
@@ -48,7 +50,7 @@ const TrendChart = ({ data, type, yearRange, onYearRangeChange, selectedParties,
                 .attr('y', height / 2)
                 .attr('text-anchor', 'middle')
                 .attr('fill', 'var(--text-muted)')
-                .text('No hay datos para esta selección');
+                .text(t('no_data_for_selection'));
             return;
         }
 
@@ -171,22 +173,22 @@ const TrendChart = ({ data, type, yearRange, onYearRangeChange, selectedParties,
             {/* Chart Header with Type Toggle */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', flexWrap: 'wrap', gap: '8px' }}>
                 <div style={{ display: 'flex', gap: '4px' }}>
-                    {['votes', 'seats', 'percentage'].map(t => (
+                    {['votes', 'seats', 'percentage'].map(chartType => (
                         <button
-                            key={t}
-                            onClick={() => onTypeChange(t)}
+                            key={chartType}
+                            onClick={() => onTypeChange(chartType)}
                             style={{
                                 padding: '4px 10px',
                                 fontSize: '0.7rem',
                                 fontWeight: 600,
-                                border: type === t ? '1px solid var(--primary)' : '1px solid var(--surface-border)',
-                                background: type === t ? 'rgba(44, 80, 171, 0.1)' : 'transparent',
-                                color: type === t ? 'var(--primary)' : 'var(--text-muted)',
+                                border: type === chartType ? '1px solid var(--primary)' : '1px solid var(--surface-border)',
+                                background: type === chartType ? 'rgba(44, 80, 171, 0.1)' : 'transparent',
+                                color: type === chartType ? 'var(--primary)' : 'var(--text-muted)',
                                 borderRadius: '4px',
                                 cursor: 'pointer'
                             }}
                         >
-                            {t === 'votes' ? 'Votos' : t === 'seats' ? 'Escaños' : '%'}
+                            {chartType === 'votes' ? t('votes') : chartType === 'seats' ? t('seats') : '%'}
                         </button>
                     ))}
                 </div>
@@ -206,7 +208,7 @@ const TrendChart = ({ data, type, yearRange, onYearRangeChange, selectedParties,
                                 cursor: 'pointer'
                             }}
                         >
-                            Congreso
+                            {t('congreso')}
                         </button>
                         <button
                             onClick={() => setSeatFilter('municipales')}
@@ -220,14 +222,14 @@ const TrendChart = ({ data, type, yearRange, onYearRangeChange, selectedParties,
                                 cursor: 'pointer'
                             }}
                         >
-                            Municipales
+                            {t('municipales')}
                         </button>
                     </div>
                 )}
 
                 {/* Year Range Controls - Per Chart */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginLeft: '8px', paddingLeft: '8px', borderLeft: '1px solid var(--surface-border)', fontSize: '0.7rem' }}>
-                    <span style={{ color: 'var(--text-muted)' }}>Desde:</span>
+                    <span style={{ color: 'var(--text-muted)' }}>{t('from')}</span>
                     <select
                         value={yearRange?.from || 1977}
                         onChange={e => onYearRangeChange?.({ ...yearRange, from: parseInt(e.target.value) })}
@@ -238,7 +240,7 @@ const TrendChart = ({ data, type, yearRange, onYearRangeChange, selectedParties,
                             <option key={y} value={y}>{y}</option>
                         ))}
                     </select>
-                    <span style={{ color: 'var(--text-muted)' }}>Hasta:</span>
+                    <span style={{ color: 'var(--text-muted)' }}>{t('to')}</span>
                     <select
                         value={yearRange?.to || 2024}
                         onChange={e => onYearRangeChange?.({ ...yearRange, to: parseInt(e.target.value) })}
@@ -255,7 +257,7 @@ const TrendChart = ({ data, type, yearRange, onYearRangeChange, selectedParties,
                     <button
                         onClick={onRemove}
                         style={{ marginLeft: 'auto', background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: '1.2rem' }}
-                        title="Eliminar gráfico"
+                        title={t('remove_chart')}
                     >×</button>
                 )}
             </div>
@@ -343,6 +345,7 @@ const TrendChart = ({ data, type, yearRange, onYearRangeChange, selectedParties,
 };
 
 const TimeHistory = () => {
+    const { t } = useLanguage();
     const [historyData, setHistoryData] = useState([]);
 
     // Default Selected Parties per user request
@@ -467,7 +470,7 @@ const TimeHistory = () => {
             {/* Controls Row - Chart dimensions & Add button */}
             <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap' }}>
                 <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-                    <label style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>Ancho:</label>
+                    <label style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>{t('width')}</label>
                     <input
                         type="range"
                         min="500"
@@ -478,7 +481,7 @@ const TimeHistory = () => {
                     />
                 </div>
                 <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-                    <label style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>Alto:</label>
+                    <label style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>{t('height')}</label>
                     <input
                         type="range"
                         min="200"
@@ -490,13 +493,13 @@ const TimeHistory = () => {
                 </div>
 
                 <button onClick={addChart} disabled={charts.length >= 3} className="btn-primary" style={{ marginLeft: 'auto', opacity: charts.length >= 3 ? 0.5 : 1 }}>
-                    + Añadir Gráfico
+                    {t('add_chart')}
                 </button>
             </div>
 
             {/* Charts */}
             <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                {charts.length === 0 && <div className="loading">Añade un gráfico para comenzar...</div>}
+                {charts.length === 0 && <div className="loading">{t('add_chart_to_start')}</div>}
 
                 {charts.map(chart => (
                     <TrendChart

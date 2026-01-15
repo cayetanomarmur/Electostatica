@@ -15,17 +15,27 @@ const SavedPredictions = ({ savedList, onLoad, onDelete }) => {
                     // Prepare visual bar data - only SELECTED parties
                     const parties = Object.entries(item.selectedSeats || {})
                         .filter(([_, seats]) => seats > 0)
-                        .map(([party, seats]) => ({
-                            party,
-                            seats,
-                            display: normalizeParty(party).display || party,
-                            color: normalizeParty(party).color
-                        }))
+                        .map(([party, seats]) => {
+                            const status = item.selectedParties?.[party] || 'yes';
+                            const norm = normalizeParty(party);
+                            return {
+                                party,
+                                seats,
+                                status,
+                                display: norm.display || party,
+                                color: norm.color
+                            };
+                        })
                         .sort((a, b) => b.seats - a.seats);
 
-                    const totalSelectedSeats = parties.reduce((s, p) => s + p.seats, 0);
+                    const totalSelectedSeats = parties.reduce((s, p) => p.status === 'yes' ? s + p.seats : s, 0);
+                    const totalAbstSeats = parties.reduce((s, p) => p.status === 'abst' ? s + p.seats : s, 0);
                     const hasMajority = totalSelectedSeats >= majoritySeats;
-                    const partyNames = parties.map(p => p.display).join(' + ');
+
+                    // Format party names
+                    const partyNames = parties.map(p => {
+                        return p.status === 'abst' ? `${p.display} (Abst)` : p.display;
+                    }).join(' + ');
 
                     return (
                         <div key={item.id} className="saved-item" onClick={() => onLoad(item.seats, item.selectedParties)}>
@@ -66,10 +76,17 @@ const SavedPredictions = ({ savedList, onLoad, onDelete }) => {
                                             key={p.party}
                                             style={{
                                                 width: `${(p.seats / maxSeats) * 100}%`,
-                                                backgroundColor: p.color,
+                                                background: p.status === 'abst' ?
+                                                    `repeating-linear-gradient(
+                                                        -45deg,
+                                                        ${p.color || '#999'},
+                                                        ${p.color || '#999'} 4px,
+                                                        rgba(0,0,0,0.5) 4px,
+                                                        rgba(0,0,0,0.5) 8px
+                                                    )` : (p.color || '#ccc'),
                                                 transition: 'width 0.3s'
                                             }}
-                                            title={`${p.display}: ${p.seats}`}
+                                            title={`${p.display}: ${p.seats} ${p.status === 'abst' ? '(Abstención)' : ''}`}
                                         />
                                     ))}
                                 </div>
@@ -102,7 +119,7 @@ const SavedPredictions = ({ savedList, onLoad, onDelete }) => {
                                     textOverflow: 'ellipsis',
                                     whiteSpace: 'nowrap'
                                 }}>
-                                    {partyNames} = <strong>{totalSelectedSeats}</strong>
+                                    {partyNames} = <strong>{totalSelectedSeats}</strong>{totalAbstSeats > 0 && <span style={{ opacity: 0.7 }}> (+{totalAbstSeats})</span>}
                                 </span>
                                 <span style={{
                                     fontSize: '0.7rem',

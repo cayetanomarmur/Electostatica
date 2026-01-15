@@ -1,7 +1,9 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 import SpanishMap from './Map/SpanishMap';
+import { useLanguage } from '../context/LanguageContext';
 
 const MultiMapView = ({ elections }) => {
+    const { t } = useLanguage();
     // Group elections by type
     const electionsByType = useMemo(() => {
         const groups = { congreso: [], municipales: [] };
@@ -197,7 +199,7 @@ const MultiMapView = ({ elections }) => {
 
     const getShortName = (election) => {
         if (!election) return '';
-        const monthNames = ['', 'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+        const monthNames = t('months');
         return `${monthNames[parseInt(election.month)] || election.month} ${election.year}`;
     };
 
@@ -229,7 +231,7 @@ const MultiMapView = ({ elections }) => {
     const exportMap = async (mapId, format = exportFormat, bg = exportBg) => {
         const mapContainer = document.querySelector(`[data-map-id="${mapId}"] svg`);
         if (!mapContainer) {
-            alert("No se encontró el mapa");
+            alert(t('map_not_found'));
             return;
         }
 
@@ -260,7 +262,7 @@ const MultiMapView = ({ elections }) => {
     const exportAll = async () => {
         const svgs = document.querySelectorAll('#multi-view-grid [data-map-id] svg');
         if (svgs.length === 0) {
-            alert("No hay mapas para exportar");
+            alert(t('no_maps_to_export'));
             return;
         }
 
@@ -359,7 +361,7 @@ const MultiMapView = ({ elections }) => {
         <div className="multi-view-container">
             <div className="multi-controls-bar">
                 <button className="premium-btn primary" onClick={addMap}>
-                    <span>+</span> Añadir Mapa
+                    <span>+</span> {t('add_map')}
                 </button>
 
                 <div className="export-dropdown">
@@ -367,28 +369,28 @@ const MultiMapView = ({ elections }) => {
                         className="premium-btn secondary"
                         onClick={() => setShowExportMenu(!showExportMenu)}
                     >
-                        📄 Exportar ▾
+                        📄 {t('export')} ▾
                     </button>
                     {showExportMenu && (
                         <div className="export-menu">
                             <div className="export-option">
-                                <label>Formato:</label>
+                                <label>{t('format')}</label>
                                 <select value={exportFormat} onChange={(e) => setExportFormat(e.target.value)}>
                                     <option value="svg">SVG</option>
                                     <option value="png">PNG</option>
                                 </select>
                             </div>
                             <div className="export-option">
-                                <label>Fondo:</label>
+                                <label>{t('background')}</label>
                                 <select value={exportBg} onChange={(e) => setExportBg(e.target.value)}>
-                                    <option value="dark">Oscuro</option>
-                                    <option value="white">Blanco</option>
-                                    <option value="transparent">Transparente</option>
+                                    <option value="dark">{t('dark')}</option>
+                                    <option value="white">{t('white')}</option>
+                                    <option value="transparent">{t('transparent')}</option>
                                 </select>
                             </div>
                             {exportFormat === 'png' && (
                                 <div className="export-option">
-                                    <label>Resolución:</label>
+                                    <label>{t('resolution')}</label>
                                     <select value={exportScale} onChange={(e) => setExportScale(Number(e.target.value))}>
                                         <option value={1}>1x (72 DPI)</option>
                                         <option value={2}>2x (144 DPI)</option>
@@ -398,14 +400,14 @@ const MultiMapView = ({ elections }) => {
                                 </div>
                             )}
                             <button className="export-btn-confirm" onClick={exportAll}>
-                                Descargar {exportFormat.toUpperCase()}
+                                {t('')} {exportFormat.toUpperCase()}
                             </button>
                         </div>
                     )}
                 </div>
 
-                <span className="info-badge">{maps.length} mapas</span>
-                <span className="info-badge" style={{ marginLeft: 'auto', opacity: 0.7 }}>Arrastra para reordenar</span>
+                <span className="info-badge">{maps.length} {t('maps')}</span>
+                <span className="info-badge" style={{ marginLeft: 'auto', opacity: 0.7 }}>{t('drag_to_reorder')}</span>
             </div>
 
             <div
@@ -424,19 +426,20 @@ const MultiMapView = ({ elections }) => {
                 {maps.slice(0, 8).map((mapConfig, index) => {
                     const typeElections = electionsByType[mapConfig.type] || [];
 
-                    const electionSelectors = (
-                        <>
-                            <div className="drag-handle" style={{ cursor: 'move', marginRight: '8px', opacity: 0.5 }}>
-                                ⋮⋮
-                            </div>
-                            {/* Width selector removed - use resize handle */}
+                    const dragHandle = (
+                        <div className="drag-handle" style={{ cursor: 'move', opacity: 0.5, fontSize: '1.2rem', padding: '0.2rem' }}>
+                            ⋮⋮
+                        </div>
+                    );
 
+                    const selectors = (
+                        <>
                             <select
                                 value={mapConfig.type}
                                 onChange={(e) => updateMapType(mapConfig.id, e.target.value)}
                             >
-                                <option value="congreso">Congreso</option>
-                                <option value="municipales">Municipales</option>
+                                <option value="congreso">{t('congreso')}</option>
+                                <option value="municipales">{t('municipales')}</option>
                             </select>
                             <select
                                 value={mapConfig.electionId}
@@ -448,17 +451,47 @@ const MultiMapView = ({ elections }) => {
                                     </option>
                                 ))}
                             </select>
+                        </>
+                    );
+
+                    const actions = (
+                        <>
                             <button
                                 onClick={() => exportMap(mapConfig.id)}
                                 title={`Exportar ${exportFormat.toUpperCase()}`}
+                                style={{
+                                    width: '32px',
+                                    height: '32px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    background: 'rgba(10, 10, 10, 0.8)',
+                                    border: '1px solid var(--surface-border)',
+                                    color: 'white',
+                                    borderRadius: 'var(--radius-sm)',
+                                    cursor: 'pointer',
+                                    backdropFilter: 'blur(4px)'
+                                }}
                             >
                                 ⬇
                             </button>
                             <button
                                 onClick={() => removeMap(mapConfig.id)}
                                 disabled={maps.length <= 1}
-                                title="Eliminar mapa"
-                                style={{ color: maps.length > 1 ? '#ef4444' : undefined }}
+                                title={t('remove_map')}
+                                style={{
+                                    width: '32px',
+                                    height: '32px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    background: 'rgba(10, 10, 10, 0.8)',
+                                    border: '1px solid var(--surface-border)',
+                                    color: maps.length > 1 ? '#ef4444' : 'gray',
+                                    borderRadius: 'var(--radius-sm)',
+                                    cursor: maps.length > 1 ? 'pointer' : 'not-allowed',
+                                    backdropFilter: 'blur(4px)'
+                                }}
                             >
                                 ×
                             </button>
@@ -514,32 +547,16 @@ const MultiMapView = ({ elections }) => {
                                 {mapConfig.electionId ? (
                                     <SpanishMap
                                         electionId={mapConfig.electionId}
-                                        electionSelectors={electionSelectors}
+                                        electionSelectors={selectors}
+                                        extraControls={actions}
+                                        dragHandle={dragHandle}
+                                        showLanguageControl={false}
                                     />
                                 ) : (
                                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', opacity: 0.5 }}>
-                                        Cargando...
+                                        {t('loading')}
                                     </div>
                                 )}
-
-                                {/* Resize Handle (Corner) */}
-                                <div
-                                    className="resize-handle"
-                                    onMouseDown={(e) => handleResizeStart(e, mapConfig.id)}
-                                    style={{
-                                        position: 'absolute',
-                                        bottom: 0,
-                                        right: 0,
-                                        width: '24px',
-                                        height: '24px',
-                                        cursor: 'se-resize',
-                                        background: 'linear-gradient(135deg, transparent 50%, var(--primary) 50%)',
-                                        borderBottomRightRadius: '12px',
-                                        zIndex: 20,
-                                        opacity: 0.7
-                                    }}
-                                    title="Arrastra para cambiar tamaño (ancho y alto)"
-                                />
                             </div>
                         </div>
                     );
