@@ -8,7 +8,7 @@ Whether you're a journalist, political analyst, researcher, or simply a curious 
 
 <img src="public/demo.gif" alt="Demo" width="800"/>
 
-> _Created by Cayetano Martínez-Muriel. This application was architected and developed with assistance from Google Gemini._
+> _Created by Cayetano Martínez-Muriel. This application was architected and developed with assistance from Google Antigravity._
 
 ---
 
